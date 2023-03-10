@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:navbar2/views/page2.dart';
 import 'package:navbar2/views/page3.dart';
 import 'package:navbar2/views/page4.dart';
 import 'package:navbar2/views/page5.dart';
-import 'custom/custom_navbar.dart';
 import 'views/page1.dart';
 
 class HomePage extends StatefulWidget {
@@ -12,15 +12,36 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  ScrollController _hideButtonController;
+  var _isVisible;
   int pageIndex = 0;
+  final pages = [Page1(), Page2(), Page3(), Page4(), Page5()];
 
-  final pages = [
-    Page1(),
-    Page2(),
-    Page3(),
-    Page4(),
-    Page5(),
-  ];
+  @override
+  initState() {
+    super.initState();
+    _isVisible = true;
+    _hideButtonController = new ScrollController();
+    _hideButtonController.addListener(() {
+      if (_hideButtonController.position.userScrollDirection ==
+          ScrollDirection.reverse) {
+        if (_isVisible)
+          setState(() {
+            _isVisible = false;
+            print("**** $_isVisible up");
+          });
+      }
+      if (_hideButtonController.position.userScrollDirection ==
+          ScrollDirection.forward) {
+        if (!_isVisible)
+          setState(() {
+            _isVisible = true;
+            print("**** $_isVisible down");
+          });
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,9 +50,19 @@ class _HomePageState extends State<HomePage> {
         centerTitle: true,
         title: Text("Custom NavBar App"),
       ),
-      body: SingleChildScrollView(child: pages[pageIndex]),
+      body: SingleChildScrollView(
+          controller: _hideButtonController, child: pages[pageIndex]),
       extendBody: true,
-      bottomNavigationBar: customNavBar2(context),
+      bottomNavigationBar: AnimatedContainer(
+        duration: Duration(milliseconds: 300),
+        height: _isVisible ? 100.0 : 20.0,
+        child: _isVisible
+            ? customNavBar2(context)
+            : Container(
+                color: Colors.transparent,
+                width: MediaQuery.of(context).size.width,
+              ),
+      ),
     );
   }
 

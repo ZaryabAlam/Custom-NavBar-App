@@ -5,6 +5,5 @@ class Page2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return navpagemethod("Location", Icons.location_pin, Colors.blue);
-    ;
   }
 }
