@@ -6,6 +6,7 @@ import 'package:navbar2/views/page4.dart';
 import 'package:navbar2/views/page5.dart';
 import 'views/page1.dart';
 
+//test
 class HomePage extends StatefulWidget {
   @override
   State<HomePage> createState() => _HomePageState();
